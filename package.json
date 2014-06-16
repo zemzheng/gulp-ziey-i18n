@@ -17,5 +17,20 @@
     "art-template": "~3.0.0",
     "gulp-util": "~2.2.17",
     "through2": "~0.5.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "art-template": "~3.0.0",
+    "gulp-util": "~2.2.17",
+    "through2": "~0.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zemzheng/gulp-ziey-i18n.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zemzheng/gulp-ziey-i18n/issues"
   }
 }
