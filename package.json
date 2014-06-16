@@ -1,0 +1,21 @@
+{
+  "name": "gulp-ziey-i18n",
+  "version": "0.0.0",
+  "description": "gulp i18n tool by zem",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "gulp",
+    "ziey",
+    "i18n"
+  ],
+  "author": "zemzheng@gmail.com",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "art-template": "~3.0.0",
+    "gulp-util": "~2.2.17",
+    "through2": "~0.5.1"
+  }
+}
