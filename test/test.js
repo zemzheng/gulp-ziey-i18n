@@ -1,4 +1,4 @@
-var assert = require("assert");
+var assert = require("should");
 
 var Buffer = require('buffer').Buffer;
 var fs     = require( 'fs' );
@@ -7,75 +7,72 @@ var path   = require( 'path' );
 var gutil = require('gulp-util');
 
 var gettext = require( '../gettext.js' );
+var i18n    = require( '../' );
 
-describe( '[gettext]', function(){
-    var lang = 'demo';
-    var tmp_po_file  = path.join( __dirname, 'tmp_lang.po' );
-    gettext.handlePoTxt( lang, tmp_po_file );
-    gettext.setLang( lang );
-    
+var check = function( tips, stream, input, output ){
+    var inputFile = new gutil.File({ 
+        contents : new Buffer( input )
+    });
 
-    var check = function( input, output, done ){
-        var file = new gutil.File({
-            contents: new Buffer( input )
-        });
-        var i18n = require( '../index.js' );
-
-        var b = i18n({
-            lang : lang,
-            po   : tmp_po_file,
-        });
-        b.write( file );
-        b.once( 'data',function( file ) {
-            assert( file.isBuffer() );
-            assert.equal( file.contents.toString('utf8'), output );
-            done();
-        });
-    }
-
-    it( 'Wording inside pofile', function( done ){
-        fs.writeFileSync(
-            tmp_po_file, 
-            gettext.obj2po({
-                a : "A",
-                b : "B",
-                c : "C"
-            })
-        );
-        check( 
-            '{{= _("a") }}{{= _("b") }}{{= _("c") }}',
-            'ABC',
-            done
-        )
+    stream.once( 'data', function( outputFile ){
+        it( tips, function(){
+            outputFile.contents
+                .toString()
+                .should.equal( output );
+        } );
     } );
 
-    it( 'Some wording not inside pofile', function( done ){
-        fs.writeFileSync(
-            tmp_po_file, 
-            gettext.obj2po({
+    stream.write( inputFile );
+    // stream.end();
+}
+
+describe( 'gettext', function(){
+    var opt = {
+            lang : 'en',
+            po   : gettext.obj2po({
                 a : "A",
-                b : "B",
-                c : "C"
+                b : 'B'
             })
-        );
-        check( 
-            '{{= _("a") }}{{= _("d") }}{{= _("c") }}',
-            'AdC',
-            done
-        )
+        },
+        stream = i18n( opt );
+
+    check( '单个命中', stream,
+        '{{= _("a") }}', 'A'
+    );
+
+    check( '多个命中', stream,
+        '{{= _("b") }}{{= _("a") }}{{= _("b") }}', 'BAB'
+    );
+    check( '单个不命中', stream,
+        '{{= _("c") }}', 'c'
+    );
+    check( '多个不命中', stream,
+        '{{= _("c") }}{{= _("d") }}{{= _("c") }}', 'cdc'
+    );
+    check( '多个混合', stream,
+        '{{= _("c") }}{{= _("b") }}{{= _("a") }}{{= _("d") }}{{= _("c") }}', 'cBAdc'
+    );
+
+    stream.once( 'end', function( outputFile ){
+        it( 'xgettext', function(){
+            var input = gettext.po2obj( outputFile.contents.toString() ),
+                output = {
+                    a : "A",
+                    c : "",
+                    d : "",
+                    b : 'B'
+                },
+                key;
+            for( key in input ){
+                input[ key ].should.equal( output[ key ] );
+            }
+        } );
     } );
 
-    // it( 'Wording outof pofile', function(){
-    //     var i18n = require( '../index.js' );
-    // } );
+    stream.end();
+
+    var tmp_file = opt.path = 'tmp_file.po';
+    fs.writeFileSync( tmp_file, opt.po );
+    stream = stream = i18n( opt );
 } );
 
-// describe('Array', function(){
-//     describe('#indexOf()', function(){
-//         it('should return -1 when the value is not present', function(){
-//             assert.equal(-10, [1,2,3].indexOf(5));
-//             assert.equal(-1, [1,2,3].indexOf(0));
-//         })
-//     })
-// });
- 

@@ -1,0 +1,36 @@
+# gulp-ziey-i18n
+
+- 类似 [grunt-ziey-i18n][1]，这个项目是提供给 gulp 的
+- template 使用 [art-template][2]
+```js
+// options
+//      .template    
+//          .options : template 设置
+//          .helpers : template 辅助函数
+//      .po          : po 文件内容
+//      .lang        : po 文件的语言标识
+//      .path        : po 文件路径 
+//  * 1.先尝试读取 path 的文件内容
+//  * 2.不存在 path 则使用 po 的文本内容
+//  * 3 po 为空使用空字符串
+var gulp = require('gulp');
+var i18n = require('../gulp-ziey-i18n/index.js');
+
+gulp.task('default', function(cb){
+    gulp.src( 'src/*' )
+        .pipe( 
+            i18n({
+                lang : 'en_US',
+                path : 'en_US.po'
+            })
+        )
+        .pipe(
+            gulp.dest( 'dest' ) 
+        );
+});
+
+```
+
+
+  [1]: https://github.com/zemzheng/grunt-ziey-i18n
+  [2]: http://aui.github.com/artTemplate/
