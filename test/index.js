@@ -51,6 +51,10 @@ describe( 'gettext', function(){
         '{{= _("c") }}{{= _("b") }}{{= _("a") }}{{= _("d") }}{{= _("c") }}', 'cBAdc'
     );
 
+    check( '单竖线导致报错', stream,
+        '{{= _("音乐及榜单管理 | %s") }}', '音乐及榜单管理 | %s'
+    );
+
     stream.once( 'data', function( outputFile ){
         it( 'xgettext', function(){
             var input = gettext.po2obj( outputFile.contents.toString() ),
@@ -58,7 +62,8 @@ describe( 'gettext', function(){
                     a : "A",
                     c : "",
                     d : "",
-                    b : 'B'
+                    b : 'B',
+                    "音乐及榜单管理 | %s" : ""
                 },
                 key;
             for( key in input ){

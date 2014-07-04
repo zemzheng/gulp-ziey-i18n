@@ -13,4 +13,9 @@ describe( 'art-template-factory', function(){
             b = factory( 1 );
         a.should.not.equal( b );
     } );
+    it( '单竖线导致报错', function(){
+        var t = factory();
+        t.compile( '{{= "音乐及榜单管理 | %s"}}' )()
+            .should.equal( "音乐及榜单管理 | %s" );
+    } );
 } );
