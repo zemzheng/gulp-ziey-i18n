@@ -7,7 +7,9 @@
 var fs = require('fs');
 
 var reg = /^\s*(msgid|msgstr)\s*"(.*)"\s*$/g,
-    dict = {}, c_dict = null,
+    dict = {}, 
+    c_dict = null,
+    c_lang,
     _ = function(str, noempty) {
         var m_dict = c_dict || {},
             result = c_dict[str] || str;
@@ -56,8 +58,15 @@ var reg = /^\s*(msgid|msgstr)\s*"(.*)"\s*$/g,
         return dict[name] = po2obj(text);
     },
     
+    getLang = function(){ return c_lang; },
     setLang = function(lang) {
-        return c_dict = getDictByLang(lang) || c_dict;
+        var dict = getDictByLang(lang);
+        if( dict ){
+            c_lang = lang;
+        } else {
+            dict = c_dict;
+        }
+        return c_dict = dict;
     },
     getDictByLang = function(lang) {
         return dict[lang];

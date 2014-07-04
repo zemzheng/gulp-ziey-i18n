@@ -23,9 +23,7 @@ var check = function( tips, stream, input, output ){
     } );
 
     stream.write( inputFile );
-    // stream.end();
 }
-
 describe( 'gettext', function(){
     var opt = {
             lang : 'en',
@@ -53,7 +51,7 @@ describe( 'gettext', function(){
         '{{= _("c") }}{{= _("b") }}{{= _("a") }}{{= _("d") }}{{= _("c") }}', 'cBAdc'
     );
 
-    stream.once( 'end', function( outputFile ){
+    stream.once( 'data', function( outputFile ){
         it( 'xgettext', function(){
             var input = gettext.po2obj( outputFile.contents.toString() ),
                 output = {
@@ -70,9 +68,7 @@ describe( 'gettext', function(){
     } );
 
     stream.end();
-
-    var tmp_file = opt.path = 'tmp_file.po';
-    fs.writeFileSync( tmp_file, opt.po );
-    stream = stream = i18n( opt );
+    
 } );
 
+/**/

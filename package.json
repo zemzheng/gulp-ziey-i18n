@@ -1,6 +1,6 @@
 {
   "name": "gulp-ziey-i18n",
-  "version": "0.0.0",
+  "version": "0.0.5",
   "description": "gulp i18n tool by zem",
   "main": "index.js",
   "scripts": {
@@ -14,18 +14,14 @@
   "author": "zemzheng@gmail.com",
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "art-template": "~3.0.0",
-    "gulp-util": "~2.2.17",
-    "through2": "~0.5.1",
-    "should": "~4.0.4",
-    "through": "~2.3.4"
+    "should": "~4.0.4"
   },
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "art-template": "~3.0.0",
-    "gulp-util": "~2.2.17"
+    "gulp-util": "~2.2.17",
+    "through": "~2.3.4"
   },
   "repository": {
     "type": "git",
