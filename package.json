@@ -1,6 +1,6 @@
 {
   "name": "gulp-ziey-i18n",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "gulp i18n tool by zem",
   "main": "index.js",
   "scripts": {

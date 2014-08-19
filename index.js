@@ -21,18 +21,6 @@ module.exports = function( options ){
     //      .lang        : po 文件的语言标识
     //      .path        : po 文件路径
 
-    var isDebug = options.debug;
-    // ignore 设置
-    // var ifIgnore = function( path ){
-    //     var list = ifIgnore._list,
-    //         ii = list.length;
-    //     while( ii-- ){
-    //         if( list[ ii ].test( path ) ){
-    //             return true;
-    //         }
-    //     }
-    // }
-    // ifIgnore._list = options.ignores || [];
     var template = templateFactory( options.lang );
     if( fs.existsSync( options.path ) ){
         options.po = fs.readFileSync( options.path, 'utf-8' ) || options.po || '';
@@ -86,11 +74,6 @@ module.exports = function( options ){
                     new PluginError( PLUGIN_NAME, 'Streaming not supported' )
                 );
             } else {
-                // if( ifIgnore( file.path ) ){
-                //     isDebug && gutil.log(
-                //         gutil.colors.bgBlue( 'Ignore : %s'.sprintf( file.path ) )
-                //     );
-                // } else {
                 var contents = file.contents.toString();
                  gutil.log( 
                     'I18n Input : ',
@@ -101,7 +84,6 @@ module.exports = function( options ){
                  file.contents = new Buffer(
                      template.compile( contents )(0)
                  );
-                // }
             }
             this.emit( 'data', file )
         }, 
