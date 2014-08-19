@@ -6,26 +6,36 @@
 
 var fs = require('fs');
 
-var reg = /^\s*(msgid|msgstr)\s*"(.*)"\s*$/g,
-    dict = {}, 
+var dict = {}, 
     c_dict = null,
     c_lang,
-    _ = function( str ) {
-        var m_dict = c_dict || {},
-            result = c_dict[str] || str;
-        return result;
+    _ = function( str, canEmpty ) {
+        var r = ( c_dict || {} )[str] || '';
+        return r || ( canEmpty ? r : str );
     },
 
     po2obj = function(text) {
-        var text = text.replace(/[\t\r\s\n]*(msgid|msgstr)[\t\r\s\n]*/g, '\n$1 '),
-            reg = /^\s*(msgid|msgstr)\s*"(.*)"\s*\n{0,1}/gm,
-            m_dict = {}, item_s, item_t, s_str, t_str;
-        while (
-            (item_s = reg.exec(text)) && (item_t = reg.exec(text))
-        ) {
-            item_s[2] && ( m_dict[item_s[2]] = item_t[2] );
+        text = text.split( /[\r\n]/g );
+        var line, m, obj = {}, c, result = {},
+            getObj = function(){
+                obj.msgid && ( result[ obj.msgid ] = obj.msgstr );
+                obj.msgid = obj.msgstr = '';
+            };
+        while( text.length ){
+            line = text.shift().replace( /^\s*|\s*$/g, '' );
+
+            if( m = line.match( /^(msgid|msgstr)\s+(".*")$/ ) ){
+                if( 'msgid' == m[1] && 'msgstr' == c ) getObj();
+                obj[ m[1] ] =  eval( m[2] );
+                c = m[1];
+            } else if( m = line.match( /^(".+")$/ ) ){
+               c && ( obj[ c ] += eval( m[1] ) );
+            } else {
+                getObj();
+            }
         }
-        return m_dict;
+        getObj();
+        return result;
     },
     obj2po = function(obj, header) {
         var potxt = [

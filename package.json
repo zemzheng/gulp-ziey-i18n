@@ -1,6 +1,6 @@
 {
   "name": "gulp-ziey-i18n",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "gulp i18n tool by zem",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,9 @@
     "ziey",
     "i18n"
   ],
-  "author": "zemzheng@gmail.com",
+  "author": {
+    "name": "zemzheng@gmail.com"
+  },
   "license": "BSD-2-Clause",
   "devDependencies": {
     "should": "~4.0.4"
@@ -29,5 +31,9 @@
   },
   "bugs": {
     "url": "https://github.com/zemzheng/gulp-ziey-i18n/issues"
-  }
+  },
+  "readme": "# gulp-ziey-i18n\n\n- 类似 [grunt-ziey-i18n][1]，这个项目是提供给 gulp 的\n- template 使用 [art-template][2]\n```js\n// options\n//      .template    \n//          .options : template 设置\n//          .helpers : template 辅助函数\n//      .po          : po 文件内容\n//      .lang        : po 文件的语言标识\n//      .path        : po 文件路径 \n//  * 1.先尝试读取 path 的文件内容\n//  * 2.不存在 path 则使用 po 的文本内容\n//  * 3 po 为空使用空字符串\nvar gulp = require('gulp');\nvar i18n = require('../gulp-ziey-i18n/index.js');\n\ngulp.task('default', function(cb){\n    gulp.src( 'src/*' )\n        .pipe( \n            i18n({\n                lang : 'en_US',\n                path : 'en_US.po'\n            })\n        )\n        .pipe(\n            gulp.dest( 'dest' ) \n        );\n});\n\n```\n\n\n  [1]: https://github.com/zemzheng/grunt-ziey-i18n\n  [2]: http://aui.github.com/artTemplate/\n",
+  "readmeFilename": "README",
+  "_id": "gulp-ziey-i18n@0.0.7",
+  "_from": "gulp-ziey-i18n@"
 }
