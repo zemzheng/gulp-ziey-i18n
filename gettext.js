@@ -10,7 +10,7 @@ var reg = /^\s*(msgid|msgstr)\s*"(.*)"\s*$/g,
     dict = {}, 
     c_dict = null,
     c_lang,
-    _ = function(str, noempty) {
+    _ = function( str ) {
         var m_dict = c_dict || {},
             result = c_dict[str] || str;
         return result;
@@ -29,22 +29,23 @@ var reg = /^\s*(msgid|msgstr)\s*"(.*)"\s*$/g,
     },
     obj2po = function(obj, header) {
         var potxt = [
-            'msgid ""',
-            'msgstr ""',
-            '"MIME-Version: 1.0\\n"',
-            '"Content-Type: text/plain; charset=UTF-8\\n"',
-            '"Content-Transfer-Encoding: 8bit\\n"'
-        ].concat( header || [] ).join('\n'),
+                'msgid ""',
+                'msgstr ""',
+                '"MIME-Version: 1.0\\n"',
+                '"Content-Type: text/plain; charset=UTF-8\\n"',
+                '"Content-Transfer-Encoding: 8bit\\n"'
+            ].concat( header || [] ).join('\n'),
+            pobody = [],
             key;
         for (key in obj) {
-            potxt += [
-                '','',
-                'msgid "' + key.replace(/(["\\])/g, '\\$1') + '"',
-                'msgstr "' + ( obj[key] || '' ).replace(/(["\\])/g, '\\$1') + '"',
-            ].join('\n');
+            pobody.push(
+                'msgid "' + key.replace(/(["\\])/g, '\\$1') + '"\n' +
+                'msgstr "' + ( obj[key] || '' ).replace(/(["\\])/g, '\\$1') + '"\n'
+            );
         }
+        pobody.sort();
 
-        return potxt;
+        return potxt + '\n' + pobody.join( '\n' );
     },
 
     handlePo = function(name, path) {
