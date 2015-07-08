@@ -3,7 +3,7 @@ var fs     = require( 'fs' );
 var path   = require( 'path' );
 
 require('./string.extends.js');
-var gettext  = require('./gettext.js');
+var gettext = require( 'ziey-gettext' );
 var templateFactory = require('./art-template-factory.js');
 var through  = require('through');
 
@@ -11,6 +11,27 @@ var gutil = require('gulp-util');
 var PluginError = gutil.PluginError;
 
 const PLUGIN_NAME = 'gulp-ziey-i18n';
+
+function getTmplErrorFuncByPath( path ){
+    return function( e ){
+        gutil.log( 
+            gutil.colors.bgRed( 
+                'Template Error : %s : %s'.sprintf( path, e.name ) 
+            ) 
+        );
+    }
+};
+function getGettextFuncByPath( po_path, file_path ){
+    var reference = path.relative(
+            po_path ? path.dirname( po_path ) : __dirname,
+            file_path || __dirname
+        );
+    return function( str ){
+        var result = gettext._( str );
+        gettext.updateCurrentDict( str, { reference : reference } );
+        return result || str;
+    }
+};
 
 module.exports = function( options ){
     // options
@@ -40,29 +61,7 @@ module.exports = function( options ){
         this.emit( 'error', new PluginError( PLUGIN_NAME, e ) );
     }
 
-    // i18n 设置
-    var poDict = template.poDict;
-    if( !poDict ){
-        // 每一个语言解析器挂一个版本的字典汇集
-        poDict = template.poDict = {};
-    }
     gettext.handlePoTxt( options.lang, options.po );
-
-    template.helper( '_', function( str ){
-        var outstr = gettext._( str, 1 );
-        poDict[ str ] = outstr || '';
-        return outstr || str;
-    } );
-
-    var getTmplErrorFuncByFile = function( path ){
-        return function( e ){
-            gutil.log( 
-                gutil.colors.bgRed( 
-                    'Template Error : %s : %s'.sprintf( path, e.name ) 
-                ) 
-            );
-        }
-    };
 
     return through(
         function( file ) {
@@ -75,27 +74,17 @@ module.exports = function( options ){
                 );
             } else {
                 var contents = file.contents.toString();
-                 gutil.log( 
-                    'I18n Input : ',
-                    gutil.colors.yellow( file.path || contents )
-                 );
-                 gettext.setLang( options.lang );
-                 template.onerror = getTmplErrorFuncByFile( file.path );
-                 file.contents = new Buffer(
-                     template.compile( contents )(0)
-                 );
+                 
+                gettext.setLang( options.lang );
+                template.helper( '_', getGettextFuncByPath( options.path, file.path ) );
+                template.onerror = getTmplErrorFuncByPath( file.path );
+                file.contents = new Buffer( template.compile( contents )(0) );
             }
             this.emit( 'data', file )
         }, 
         function(){
-            var poDict0 = gettext.getDictByLang( options.lang );
-            if( !options.clean_po ){
-                for( msgid in poDict0 ){
-                    if( !poDict[ msgid ] ){
-                        poDict[ msgid ] = poDict0[ msgid ];
-                    }
-                }
-            }
+            var poDict = gettext.getDictByLang( options.lang );
+
             var poTxt = gettext.obj2po( poDict ),
                 b = __dirname, 
                 p = path.join( b, options.lang + '.po' );

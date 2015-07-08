@@ -1,12 +1,9 @@
 var assert = require("should");
 
 var Buffer = require('buffer').Buffer;
-var fs     = require( 'fs' );
-var path   = require( 'path' );
 
-var gutil = require('gulp-util');
-
-var gettext = require( '../gettext.js' );
+var gutil  = require('gulp-util');
+var gettext = require( 'ziey-gettext' );
 var i18n    = require( '../' );
 
 var check = function( tips, stream, input, output ){
@@ -23,13 +20,13 @@ var check = function( tips, stream, input, output ){
     } );
 
     stream.write( inputFile );
-}
+};
 describe( 'gulp - stream', function(){
     var opt = {
             lang : 'en',
             po   : gettext.obj2po({
-                a : "A",
-                b : 'B'
+                a : { str : "A" },
+                b : { str : 'B' }
             })
         },
         stream = i18n( opt );
@@ -67,7 +64,7 @@ describe( 'gulp - stream', function(){
                 },
                 key;
             for( key in input ){
-                input[ key ].should.equal( output[ key ] );
+                input[ key ].str.should.equal( output[ key ] );
             }
         } );
     } );
