@@ -36,5 +36,5 @@
 
 ## dependencies
 
-  [1]: https://github.com/zemzheng/grunt-ziey-i18n
-  [2]: http://aui.github.com/artTemplate/
+* [ziey-gettext](https://github.com/zemzheng/ziey-gettext)
+* [artTemplate](http://aui.github.com/artTemplate/)
