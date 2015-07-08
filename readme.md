@@ -1,6 +1,6 @@
 # gulp-ziey-i18n
 
-[![Build Status](https://travis-ci.org/zemzheng/gulp-ziey-i18n?branch=master)](https://travis-ci.org/zemzheng/gulp-ziey-i18n)
+[![Build Status](https://travis-ci.org/zemzheng/gulp-ziey-i18n.svg?branch=master)](https://travis-ci.org/zemzheng/gulp-ziey-i18n)
 
 ## install
 
