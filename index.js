@@ -27,7 +27,7 @@ function getGettextFuncByPath( po_path, file_path ){
             file_path || __dirname
         );
     return function( str ){
-        var result = gettext._( str );
+        var result = gettext._( str ).replace( /(["'])/g, '\\$1' );
         gettext.updateCurrentDict( str, { reference : reference } );
         return result || str;
     }
