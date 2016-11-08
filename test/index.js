@@ -21,7 +21,7 @@ var check = function( tips, stream, input, output ){
 
     stream.write( inputFile );
 };
-describe( 'gulp - stream', function(){
+describe( __filename, function(){
     var opt = {
             lang : 'en',
             po   : gettext.obj2po({

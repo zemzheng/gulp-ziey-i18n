@@ -4,61 +4,25 @@ var path   = require( 'path' );
 
 require('./string.extends.js');
 var gettext = require( 'ziey-gettext' );
-var templateFactory = require('./art-template-factory.js');
 var through  = require('through');
+var pick = require( 'ziey-utils' ).pick;
 
 var gutil = require('gulp-util');
 var PluginError = gutil.PluginError;
 
 const PLUGIN_NAME = 'gulp-ziey-i18n';
 
-function getTmplErrorFuncByPath( path ){
-    return function( e ){
-        gutil.log( 
-            gutil.colors.bgRed( 
-                'Template Error : %s : %s'.sprintf( path, e.name ) 
-            ) 
-        );
-    }
-};
-function getGettextFuncByPath( po_path, file_path ){
-    var reference = path.relative(
-            po_path ? path.dirname( po_path ) : __dirname,
-            file_path || __dirname
-        );
-    return function( str ){
-        var result = gettext._( str ).replace( /(["'])/g, '\\$1' );
-        gettext.updateCurrentDict( str, { reference : reference } );
-        return result || str;
-    }
-};
 
 module.exports = function( options ){
     // options
     //      .template    
     //          .options : template 设置
-    //          .helpers : template 辅助函数
     //      .po          : po 文件内容
     //      .lang        : po 文件的语言标识
     //      .path        : po 文件路径
 
-    var template = templateFactory( options.lang );
     if( fs.existsSync( options.path ) ){
         options.po = fs.readFileSync( options.path, 'utf-8' ) || options.po || '';
-    }
-
-    // template 设置
-    var key, o;
-    o = options && options.template && options.template.options || {};
-    for( key in o ){
-        template[ key ] = options.template.options[ key ];
-    }
-    o = options && options.template && options.template.helpers || {};
-    for( key in o ){
-        template.helper( key, options.template.helpers[ key ] );
-    }
-    template.onerror = function( e ){
-        this.emit( 'error', new PluginError( PLUGIN_NAME, e ) );
     }
 
     gettext.handlePoTxt( options.lang, options.po );
@@ -73,12 +37,48 @@ module.exports = function( options ){
                     new PluginError( PLUGIN_NAME, 'Streaming not supported' )
                 );
             } else {
-                var contents = file.contents.toString();
-                 
-                gettext.setLang( options.lang );
-                template.helper( '_', getGettextFuncByPath( options.path, file.path ) );
-                template.onerror = getTmplErrorFuncByPath( file.path );
-                file.contents = new Buffer( template.compile( contents )(0) );
+
+                var lang      = options.lang,
+                    pickOpts  = ( options.template || {} ).options || {},
+                    po_path   = options.path,
+                    file_path = file.path;
+
+                gettext.setLang( lang );
+
+                try{
+                    file.contents = new Buffer( 
+                        pick( file.contents.toString(), {
+                            openTag  : pickOpts.openTag  || '{{',
+                            closeTag : pickOpts.closeTag || '}}',
+                            inputAdjust : function( str ){
+                                return str
+                                    .replace( /^=\s*\_\s*\(\s*["']/g, '' )
+                                    .replace( /["']\s*\)[;\s]*$/g, '' )
+                                    .trim();
+                            },
+                            outputAdjust : function( str ){
+                                var result = gettext._( str ).replace( /(["'])/g, '\\$1' );
+                                gettext.updateCurrentDict(
+                                    str,
+                                    {
+                                        reference : path.relative(
+                                            po_path ? path.dirname( po_path ) : __dirname,
+                                            file_path || __dirname
+                                        )
+                                    }
+                                );
+                                return result || str;
+                            },
+                        } ).result.join( '' )
+                    );
+                } catch(e){
+                    gutil.log( 
+                        gutil.colors.bgRed( 'Template Error : %s : %s'.sprintf( path, e.name ) ),
+                        e 
+                    );
+                    throw e;
+                }
+
             }
             this.emit( 'data', file )
         }, 
