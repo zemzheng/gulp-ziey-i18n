@@ -1,17 +1,15 @@
 # gulp-ziey-i18n
 
 [![Build Status](https://travis-ci.org/zemzheng/gulp-ziey-i18n.svg?branch=master)](https://travis-ci.org/zemzheng/gulp-ziey-i18n)
+[![NPM version][npm-image]][npm-url] 
 
-## install
-
-    npm install gulp-ziey-i18n
+[![NPM][nodei-image]][nodei-url]
 
 ## usage
 
     // options
     //      .template    
     //          .options : template 设置
-    //          .helpers : template 辅助函数
     //      .po          : po 文件内容
     //      .lang        : po 文件的语言标识
     //      .path        : po 文件路径
@@ -37,4 +35,4 @@
 ## dependencies
 
 * [ziey-gettext](https://github.com/zemzheng/ziey-gettext)
-* [artTemplate](http://aui.github.com/artTemplate/)
+* [ziey-utils](https://github.com/zemzheng/ziey-gettext)
