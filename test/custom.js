@@ -52,13 +52,19 @@ describe( __filename, function(){
     check( '单个不命中', stream,
         '{%= _("c") ]]', 'c'
     );
-    try{
-        check( '匹配失败', stream,
-            '{%= _("c") ', 'c'
-        );
-    } catch( e ){
-        console.log( e );
-    }
+
+    it( '存在没有闭合的情况，给出提示', function( done ){
+        var inputFile = new gutil.File({ 
+            contents : new Buffer( '{% 123 ]] {%= _("c") ' )
+        });
+        try{
+            stream.write( inputFile );
+        } catch(e){
+            e.index.should.equal( 2 );
+            done();
+        }
+    } );
+
     check( '多个不命中', stream,
         '{% c ]]{%= _("d") ]]{%= _("c") ]]', 'cdc'
     );
