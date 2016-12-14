@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zemzheng/gulp-ziey-i18n.svg?branch=master)](https://travis-ci.org/zemzheng/gulp-ziey-i18n)
 
-[![NPM version][https://img.shields.io/npm/v/gulp-ziey-i18n.svg]][https://nodei.co/npm/gulp-ziey-i18n]
+[![NPM version](https://img.shields.io/npm/v/gulp-ziey-i18n.svg)](https://nodei.co/npm/gulp-ziey-i18n)
 
 [![NPM](https://nodei.co/npm/gulp-ziey-i18n.png)](https://nodei.co/npm/gulp-ziey-i18n/)
 
