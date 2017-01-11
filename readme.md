@@ -10,12 +10,13 @@
 
     // options
     //      .template    
-    //          .options      : template 设置
-    //              .openTag  : '{{', 默认值
-    //              .closeTag : '}}', 默认值
-    //      .po               : po 文件内容
-    //      .lang             : po 文件的语言标识
-    //      .path             : po 文件路径，设置了路径会覆盖 po 的设置
+    //          .options       : template 设置
+    //              .openTag   : '{{', 默认值
+    //              .closeTag  : '}}', 默认值
+    //      .po                : po 文件内容
+    //      .lang              : po 文件的语言标识
+    //      .path              : po 文件路径，设置了路径会覆盖 po 的设置
+    //      .keep_no_reference : 是否保留不再引用的词条，默认为 false
     //  * 1.先尝试读取 path 的文件内容
     //  * 2.不存在 path 则使用 po 的文本内容
     //  * 3 po 为空使用空字符串

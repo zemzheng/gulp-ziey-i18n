@@ -16,16 +16,19 @@ const PLUGIN_NAME = 'gulp-ziey-i18n';
 module.exports = function( options ){
     // options
     //      .template    
-    //          .options : template 设置
-    //      .po          : po 文件内容
-    //      .lang        : po 文件的语言标识
-    //      .path        : po 文件路径
+    //          .options       : template 设置
+    //      .po                : po 文件内容
+    //      .lang              : po 文件的语言标识
+    //      .path              : po 文件路径
+    //      .keep_no_reference : 是否保留不再引用的词条，默认为 false
 
     if( fs.existsSync( options.path ) ){
         options.po = fs.readFileSync( options.path, 'utf-8' ) || options.po || '';
     }
 
     gettext.handlePoTxt( options.lang, options.po );
+    gettext.setLang( options.lang );
+    options.keep_no_reference || gettext.clearCurrentDictEmptyItem();
 
     return through(
         function( file ) {
