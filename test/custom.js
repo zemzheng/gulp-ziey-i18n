@@ -30,7 +30,10 @@ describe( __filename, function(){
 
                 // #2 - case 
                 "测试更多" : { str : "Test \"More\"" },
-                "这是[更多]按钮" : { str : "It's the Button of \"More\"" }
+                "这是[更多]按钮" : { str : "It's the Button of \"More\"" },
+
+                // #3 - 这个词条将被去掉
+                'empty-item' : { str : '' },
                 
             }),
             template : {
@@ -39,8 +42,17 @@ describe( __filename, function(){
                     closeTag : ']]',
                 },
             },
+            disableShowError : true,
+            encodeSlash : '##',
         },
         stream = i18n( opt );
+
+    check( '单引号', stream,
+        "{% ' ]]", "'"
+    );
+    check( '双引号', stream,
+        '{% " ]]', '"'
+    );
 
     check( '单个命中', stream,
         '{%= _("a") ]]', 'A'
@@ -60,7 +72,6 @@ describe( __filename, function(){
         try{
             stream.write( inputFile );
         } catch(e){
-            e.index.should.equal( 2 );
             done();
         }
     } );
@@ -77,12 +88,12 @@ describe( __filename, function(){
     );
 
     check( '输出文本中单双引号带转义 - base', stream,
-        '{% \' ]]' + "{%                  \" ]]", "\\'" + '\\"'
+        '{% json ## \' ]]' + "{% json ##                 \" ]]", "'" + '\\"'
     );
 
     check( '输出文本中单双引号带转义 - case', stream,
-        "{%= _( '测试更多' ) ]]" + '{%= _( \'这是[更多]按钮\' ) ]]',
-        'Test \\"More\\"' + 'It\\\'s the Button of \\"More\\"'
+        "{% json ## 测试更多 ]]" + '{% json ## 这是[更多]按钮 ]]',
+        'Test \\"More\\"' + 'It\'s the Button of \\"More\\"'
     );
 
     

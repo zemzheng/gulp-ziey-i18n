@@ -21,10 +21,32 @@ module.exports = function( options ){
     //      .lang              : po 文件的语言标识
     //      .path              : po 文件路径
     //      .keep_no_reference : 是否保留不再引用的词条，默认为 false
+    //      .disableShowError  : 是否不显示错误信息
+    //      .encodeSlash       : 编码分隔符
 
     if( fs.existsSync( options.path ) ){
         options.po = fs.readFileSync( options.path, 'utf-8' ) || options.po || '';
     }
+
+    const { encodeSlash } = options;
+    var parse = encodeSlash
+        ? (input, _) => {
+            let [ method, ...str ] = input.split(encodeSlash);
+            if( method !== input ){
+                input = str.join( '' ).trim() 
+                str = _(input);
+                switch(method.trim().toUpperCase()){
+                    case 'JSON':
+                        str = JSON.stringify(str);
+                        str = str.substr(1,str.length - 2);
+                        break;
+                }
+            } else {
+                str = _(input);
+            }
+            return { input, output : str };
+        }
+        : (input,_) => ({ input, output : _(input.trim()) });
 
     gettext.handlePoTxt( options.lang, options.po );
     gettext.setLang( options.lang );
@@ -60,9 +82,13 @@ module.exports = function( options ){
                                     .trim();
                             },
                             outputAdjust : function( str ){
-                                var result = gettext._( str ).replace( /(["'])/g, '\\$1' );
+                                var json
+                                str.replace( /^##json##\s/g, function(){
+                                    return '';
+                                } )
+                                var { input, output : result } = parse(str, gettext._);
                                 gettext.updateCurrentDict(
-                                    str,
+                                    input,
                                     {
                                         reference : path.relative(
                                             po_path ? path.dirname( po_path ) : __dirname,
@@ -70,15 +96,17 @@ module.exports = function( options ){
                                         )
                                     }
                                 );
-                                return result || str;
+                                return result || input;
                             },
                         } ).result.join( '' )
                     );
                 } catch(e){
-                    gutil.log( 
-                        gutil.colors.bgRed( 'Template Error : %s : %s'.sprintf( path, e.name ) ),
-                        e 
-                    );
+                    if( !options.disableShowError ){
+                        gutil.log( 
+                            gutil.colors.bgRed( 'Template Error : %s : %s'.sprintf( path, e.name ) ),
+                            e 
+                        );
+                    }
                     throw e;
                 }
 
