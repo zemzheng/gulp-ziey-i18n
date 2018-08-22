@@ -21,6 +21,7 @@
     //      .keep_no_reference : 是否保留不再引用的词条，默认为 false
     //      .disableShowError  : 是否不显示错误信息
     //      .encodeSlash       : 编码分隔符如 ##
+    //      .encodeCustom      : 自定义编码输出方式
 
     //  * 1.先尝试读取 path 的文件内容
     //  * 2.不存在 path 则使用 po 的文本内容
@@ -46,6 +47,24 @@
 
     // use encodeSlash 特殊编码分隔符
     console.log("{{ json ## "hey!"}}"); // ==> console.log("\"hey!\"");
+
+    // use encodeCustom 自定义编码方式
+    // 配置时：
+        // ...
+            .pipe( 
+                i18n({
+                    lang : 'en_US',
+                    path : 'en_US.po',
+                    encodeCustom: {
+                        wrap : str => `wrap(${str})`,
+                    }
+                })
+            )
+        // ...
+
+    // 效果:
+    console.log("{{ wrap ## "hey!"}}"); // ==> console.log(wrap("hey!"));
+    
 ```
 
 ## dependencies

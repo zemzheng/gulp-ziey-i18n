@@ -28,18 +28,21 @@ module.exports = function( options ){
         options.po = fs.readFileSync( options.path, 'utf-8' ) || options.po || '';
     }
 
-    const { encodeSlash } = options;
+    const { encodeSlash, encodeCustom } = options;
     var parse = encodeSlash
         ? (input, _) => {
             let [ method, ...str ] = input.split(encodeSlash);
             if( method !== input ){
                 input = str.join( '' ).trim() 
                 str = _(input);
-                switch(method.trim().toUpperCase()){
-                    case 'JSON':
+                method = method.trim();
+                switch(true){
+                    case 'JSON' === method.toUpperCase():
                         str = JSON.stringify(str);
                         str = str.substr(1,str.length - 2);
                         break;
+                    case method in encodeCustom:
+                        str = encodeCustom[method](str);
                 }
             } else {
                 str = _(input);
@@ -50,7 +53,6 @@ module.exports = function( options ){
 
     gettext.handlePoTxt( options.lang, options.po );
     gettext.setLang( options.lang );
-    options.keep_no_reference || gettext.clearCurrentDictEmptyItem();
 
     return through(
         function( file ) {
@@ -82,19 +84,13 @@ module.exports = function( options ){
                                     .trim();
                             },
                             outputAdjust : function( str ){
-                                var json
-                                str.replace( /^##json##\s/g, function(){
-                                    return '';
-                                } )
                                 var { input, output : result } = parse(str, gettext._);
+                                const reference = path.relative(
+                                    po_path ? path.dirname( po_path ) : __dirname,
+                                    file_path || __dirname
+                                ) || '<memory>';
                                 gettext.updateCurrentDict(
-                                    input,
-                                    {
-                                        reference : path.relative(
-                                            po_path ? path.dirname( po_path ) : __dirname,
-                                            file_path || __dirname
-                                        )
-                                    }
+                                    input, { reference }
                                 );
                                 return result || input;
                             },
@@ -114,11 +110,15 @@ module.exports = function( options ){
             this.emit( 'data', file )
         }, 
         function(){
-            var poDict = gettext.getDictByLang( options.lang );
+            const { lang } = options;
+            if( !options.keep_no_reference ){
+               gettext.clearDict({ lang, reference : true });
+            }
+            var poDict = gettext.getDictByLang( lang );
 
             var poTxt = gettext.obj2po( poDict ),
                 b = __dirname, 
-                p = path.join( b, options.lang + '.po' );
+                p = path.join( b, lang + '.po' );
             if( options.path ){
                 b = path.dirname( options.path );
                 p = options.path;

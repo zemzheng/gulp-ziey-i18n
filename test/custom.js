@@ -44,6 +44,9 @@ describe( __filename, function(){
             },
             disableShowError : true,
             encodeSlash : '##',
+            encodeCustom : {
+                test : str => `test(${str})`,
+            },
         },
         stream = i18n( opt );
 
@@ -63,6 +66,9 @@ describe( __filename, function(){
     );
     check( '单个不命中', stream,
         '{%= _("c") ]]', 'c'
+    );
+    check( '命中 encodeCustom', stream,
+        "{% test ## ' ]]", "test(')"
     );
 
     it( '存在没有闭合的情况，给出提示', function( done ){
