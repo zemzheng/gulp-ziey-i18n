@@ -1,6 +1,6 @@
 {
     "name": "gulp-ziey-i18n",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "gulp i18n tool by zem",
     "main": "index.js",
     "scripts": {
@@ -14,7 +14,7 @@
     "author": {
         "name": "zemzheng@gmail.com"
     },
-    "license": "BSD-2-Clause",
+    "license": "MIT",
     "devDependencies": {
         "should": "^7.0.2",
         "mocha": "^2.3.3"
@@ -35,7 +35,5 @@
     "bugs": {
         "url": "https://github.com/zemzheng/gulp-ziey-i18n/issues"
     },
-    "readmeFilename": "README",
-    "_id": "gulp-ziey-i18n@0.0.7",
-    "_from": "gulp-ziey-i18n@"
+    "readmeFilename": "README"
 }

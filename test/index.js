@@ -112,6 +112,7 @@ describe( __filename, function(){
                 },
                 key;
             for( key in input ){
+                // console.log(input[key].reference);
                 input[ key ].str.should.equal( output[ key ] );
             }
         } );

@@ -53,6 +53,8 @@ module.exports = function( options ){
 
     gettext.handlePoTxt( options.lang, options.po );
     gettext.setLang( options.lang );
+    // 需要先清空引用关系
+    gettext.cleanCurrentDictReference();
 
     return through(
         function( file ) {
