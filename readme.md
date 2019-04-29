@@ -21,7 +21,7 @@
     //      .keep_no_reference : 是否保留不再引用的词条，默认为 false
     //      .disableShowError  : 是否不显示错误信息
     //      .encodeSlash       : 编码分隔符如 ##
-    //      .cleanCache        : 是否清理缓存
+    //      .cleanCache        : 是否清理缓存，默认为 true
     //      .encodeCustom      : 自定义编码输出方式
 
     //  * 1.先尝试读取 path 的文件内容
