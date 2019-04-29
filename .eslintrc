@@ -1,0 +1,17 @@
+{
+  "extends": "eslint:recommended",
+  "env": {
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "rules": {
+    "no-tabs":"error",
+    "indent": ["error",4, { "SwitchCase": 1 }],
+    "max-len": ["error", 120],
+    "no-console":"off"
+  }
+}

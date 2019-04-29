@@ -1,4 +1,4 @@
-var assert = require("should");
+require("should");
 var path = require( 'path' );
 
 var Buffer = require('buffer').Buffer;
@@ -8,8 +8,8 @@ var gettext = require( 'ziey-gettext' );
 var i18n    = require( '../' );
 
 var check = function( tips, stream, input, output ){
-    var inputFile = new gutil.File({ 
-        contents : new Buffer( input )
+    var inputFile = new gutil.File({
+        contents : Buffer.from( input )
     });
 
     stream.once( 'data', function( outputFile ){
@@ -29,13 +29,13 @@ describe( __filename, function(){
                 a : { str : "A" },
                 b : { str : 'B' },
 
-                // #2 - case 
+                // #2 - case
                 "测试更多" : { str : "Test \"More\"" },
                 "这是[更多]按钮" : { str : "It's the Button of \"More\"" },
 
                 // #3 - 这个词条将被去掉
                 'empty-item' : { str : '' },
-                
+
             }),
             disableShowError : true,
             encodeSlash : '##',
@@ -94,7 +94,7 @@ describe( __filename, function(){
         'Test \\"More\\"' + 'It\'s the Button of \\"More\\"'
     );
 
-    
+
 
     stream.once( 'data', function( outputFile ){
         it( 'xgettext', function(){
@@ -119,7 +119,7 @@ describe( __filename, function(){
     } );
 
     stream.end();
-    
+
 } );
 
 /**/

@@ -1,5 +1,4 @@
-var assert = require("should");
-
+require("should");
 var Buffer = require('buffer').Buffer;
 
 var gutil  = require('gulp-util');
@@ -7,8 +6,8 @@ var gettext = require( 'ziey-gettext' );
 var i18n    = require( '../' );
 
 var check = function( tips, stream, input, output ){
-    var inputFile = new gutil.File({ 
-        contents : new Buffer( input )
+    var inputFile = new gutil.File({
+        contents : Buffer.from( input )
     });
 
     stream.once( 'data', function( outputFile ){
@@ -28,13 +27,13 @@ describe( __filename, function(){
                 a : { str : "A" },
                 b : { str : 'B' },
 
-                // #2 - case 
+                // #2 - case
                 "测试更多" : { str : "Test \"More\"" },
                 "这是[更多]按钮" : { str : "It's the Button of \"More\"" },
 
                 // #3 - 这个词条将被去掉
                 'empty-item' : { str : '' },
-                
+
             }),
             template : {
                 options : {
@@ -72,8 +71,8 @@ describe( __filename, function(){
     );
 
     it( '存在没有闭合的情况，给出提示', function( done ){
-        var inputFile = new gutil.File({ 
-            contents : new Buffer( '{% 123 ]] {%= _("c") ' )
+        var inputFile = new gutil.File({
+            contents : Buffer.from( '{% 123 ]] {%= _("c") ' )
         });
         try{
             stream.write( inputFile );
@@ -102,7 +101,7 @@ describe( __filename, function(){
         'Test \\"More\\"' + 'It\'s the Button of \\"More\\"'
     );
 
-    
+
 
     stream.once( 'data', function( outputFile ){
         it( 'xgettext', function(){
@@ -126,8 +125,7 @@ describe( __filename, function(){
     } );
 
     stream.end();
-    
+
 } );
 
 /**/
-

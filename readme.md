@@ -11,7 +11,7 @@
 ```javascript
     // gulp config
     // options
-    //      .template    
+    //      .template
     //          .options       : template 设置
     //              .openTag   : '{{', 默认值
     //              .closeTag  : '}}', 默认值
@@ -21,6 +21,7 @@
     //      .keep_no_reference : 是否保留不再引用的词条，默认为 false
     //      .disableShowError  : 是否不显示错误信息
     //      .encodeSlash       : 编码分隔符如 ##
+    //      .cleanCache        : 是否清理缓存
     //      .encodeCustom      : 自定义编码输出方式
 
     //  * 1.先尝试读取 path 的文件内容
@@ -31,14 +32,14 @@
 
     gulp.task('default', function(cb){
         gulp.src( 'src/*' )
-            .pipe( 
+            .pipe(
                 i18n({
                     lang : 'en_US',
                     path : 'en_US.po'
                 })
             )
             .pipe(
-                gulp.dest( 'dest' ) 
+                gulp.dest( 'dest' )
             );
     });
 
@@ -51,7 +52,7 @@
     // use encodeCustom 自定义编码方式
     // 配置时：
         // ...
-            .pipe( 
+            .pipe(
                 i18n({
                     lang : 'en_US',
                     path : 'en_US.po',
@@ -64,7 +65,7 @@
 
     // 效果:
     console.log("{{ wrap ## "hey!"}}"); // ==> console.log(wrap("hey!"));
-    
+
 ```
 
 ## dependencies
