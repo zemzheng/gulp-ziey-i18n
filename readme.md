@@ -1,10 +1,11 @@
 # gulp-ziey-i18n
 
 [![Build Status](https://travis-ci.org/zemzheng/gulp-ziey-i18n.svg?branch=master)](https://travis-ci.org/zemzheng/gulp-ziey-i18n)
-
 [![NPM version](https://img.shields.io/npm/v/gulp-ziey-i18n.svg)](https://nodei.co/npm/gulp-ziey-i18n)
+[![GitHub license](https://img.shields.io/github/license/zemzheng/gulp-ziey-i18n.svg)](https://github.com/zemzheng/gulp-ziey-i18n/blob/master/LICENSE)
 
 [![NPM](https://nodei.co/npm/gulp-ziey-i18n.png)](https://nodei.co/npm/gulp-ziey-i18n/)
+
 
 ## usage
 
