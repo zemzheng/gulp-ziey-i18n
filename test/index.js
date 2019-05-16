@@ -2,13 +2,13 @@ require("should");
 var path = require( 'path' );
 
 var Buffer = require('buffer').Buffer;
+var Vinyl = require('vinyl');
 
-var gutil  = require('gulp-util');
 var gettext = require( 'ziey-gettext' );
 var i18n    = require( '../' );
 
 var check = function( tips, stream, input, output ){
-    var inputFile = new gutil.File({
+    var inputFile = new Vinyl({
         contents : Buffer.from( input )
     });
 

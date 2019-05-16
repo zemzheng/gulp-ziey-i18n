@@ -1,12 +1,12 @@
 require("should");
 var Buffer = require('buffer').Buffer;
 
-var gutil  = require('gulp-util');
+var Vinyl = require('vinyl');
 var gettext = require( 'ziey-gettext' );
 var i18n    = require( '../' );
 
 var check = function( tips, stream, input, output ){
-    var inputFile = new gutil.File({
+    var inputFile = new Vinyl({
         contents : Buffer.from( input )
     });
 
@@ -71,7 +71,7 @@ describe( __filename, function(){
     );
 
     it( '存在没有闭合的情况，给出提示', function( done ){
-        var inputFile = new gutil.File({
+        var inputFile = new Vinyl({
             contents : Buffer.from( '{% 123 ]] {%= _("c") ' )
         });
         try{
